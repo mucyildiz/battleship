@@ -1,5 +1,6 @@
-import { Ship } from './ship';
+import { Ship } from './Ship';
 import React, { Component } from 'react';
+import './Gameboard.css';
 
 export default class Gameboard extends Component {
     constructor(props) {
@@ -23,24 +24,59 @@ export default class Gameboard extends Component {
         this.handleAttack = this.handleAttack.bind(this);
     }
 
+    componentDidMount(props) {
+        if(!this.props.user) {
+            this.populateCPUGameboard();
+        }
+    }
+
+    populateCPUGameboard() {
+        for(let i=0; i<this.state.ships.length; i++){
+            this.placeShip(this.state.ships[i], i, 0, false);
+        }
+    }
+
 
     placeShip(ship, row, column, rotated=false) {
         // make a copy so we don't mess with the state
         let board = this.state.gameboard.slice();
         let position = 0;
-        // if rotated is false, then the ship is horizontal, if true then the ship is vertical: TODO - check to see if in bounds
+        // if rotated is false, then the ship is horizontal, if true then the ship is vertical: also checks to see if in bounds
         if (!rotated) {
             // begin at row that ship was placed on 
+            if(column + ship.getLength() > 9) {
+                throw new Error('ship is out of bounds');
+            }
+
+            for (let i=column; i<(column + ship.getLength()); i++) {
+                if(board[row][i].ship !== null) {
+                    throw new Error('Cannot overlap ships you fool.');
+                }
+            }
+
             for (let i=column; i<(column + ship.getLength()); i++) {
                 board[row][i].ship = ship;
                 board[row][i].shipPosition = position;
+                ship.isPlaced = true;
                 position++;
             }
         }
-        if (rotated) {
+        else if (rotated) {
+
+            if(row + ship.getLength() > 9) {
+                throw new Error('ship is out of bounds');
+            }
+
+            for (let i=row; i<(row + ship.getLength()); i++) {
+                if(board[i][column].ship !== null) {
+                    throw new Error('Cannot overlap ships you fool.');
+                }
+            }
+
             for (let i=row; i<(row + ship.getLength()); i++) {
                 board[i][column].ship = ship;
                 board[i][column].shipPosition = position;
+                ship.isPlaced = true;
                 position++;
             }
         }
@@ -64,13 +100,20 @@ export default class Gameboard extends Component {
     checkAllShipsSunk() {
         return this.state.ships.every((ship) => ship.isSunk());
     }
+
     render() {
-        return(
-            <h1 onClick={() => {
-                this.placeShip(this.state.ships[0], 0, 4, true)
-            }}>Hello</h1>
+
+        return (
+            <div id='gameboard-container'>
+                {this.state.gameboard.map((row, i) => 
+                    <div key={i} className='row'>
+                        {row.map((col, j) => (
+                            <div key={i + j} className='cell'></div>
+                        ))}
+                    </div>
+                )}
+            </div>
         )
     }
-
-
 }
+

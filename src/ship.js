@@ -1,5 +1,6 @@
 export const Ship = (name, length) => {
     // ship of length 'length' created and initialized with no hits
+    let isPlaced = false;
 
     const getName = () => {
         return name;
@@ -19,6 +20,6 @@ export const Ship = (name, length) => {
         return _createdShip.every((position) => position);
     }
 
-    return { getName, getLength, hitShip, isSunk}
+    return { getName, getLength, hitShip, isSunk, isPlaced};
 
 }

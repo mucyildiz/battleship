@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Ship } from './ship';
-import Gameboard from './gameboard';
+import Gameboard from './Gameboard';
+import Game from './Game';
 
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
-      <Gameboard />
+      <div>
+        <Game />
+      </div>
     )
   }
 }
-
-export default App;

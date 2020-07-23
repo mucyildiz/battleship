@@ -1,0 +1,17 @@
+#main-container {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+#gameboards {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    min-width: 1000px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+}

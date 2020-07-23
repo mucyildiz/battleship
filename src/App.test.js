@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import App from './App';
-import { Ship } from './ship';
-import Gameboard from './gameboard'; 
+import { Ship } from './Ship';
+import Gameboard from './Gameboard'; 
 
 let mockShip = Ship('mock', 3);
 let mockGameboard = new Gameboard({});
@@ -56,4 +56,14 @@ it('all ships sunk should return true', () => {
     }
   }
   expect(mockBoard.checkAllShipsSunk()).toBe(true);
+})
+
+it('placing all ships should make all ships have .isPlaced be true', () => {
+  let mockBoard = new Gameboard({});
+  for(let i=0; i<4; i++) {
+    mockBoard.placeShip(mockBoard.state.ships[i], i, 0);
+  }
+  expect(mockBoard.state.ships.every((ship) => ship.isPlaced)).toBe(false);
+  mockBoard.placeShip(mockBoard.state.ships[4], 4, 0);
+  expect(mockBoard.state.ships.every((ship) => ship.isPlaced)).toBe(true);
 })
