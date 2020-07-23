@@ -18,6 +18,9 @@ export default class Gameboard extends Component {
               {return {attacked: false, ship: null, shipPosition: null}})),
             ships: [carrier, battleship, destroyer, submarine, patrolBoat],
         }
+
+        this.placeShip = this.placeShip.bind(this);
+        this.handleAttack = this.handleAttack.bind(this);
     }
 
 
@@ -36,19 +39,35 @@ export default class Gameboard extends Component {
         }
         if (rotated) {
             for (let i=row; i<(row + ship.getLength()); i++) {
-                console.log(ship.getLength());
                 board[i][column].ship = ship;
                 board[i][column].shipPosition = position;
                 position++;
             }
         }
-        console.log(board)
+        this.setState({
+            gameboard: board,
+        });
     }
 
+    handleAttack(row, col){
+        let board = this.state.gameboard.slice();
+        if(board[row][col].attacked === false) {
+            if(board[row][col].ship !== null){
+                board[row][col].ship.hitShip(board[row][col].shipPosition);
+            }
+
+            board[row][col].attacked = true;
+    }
+        this.setState({gameboard: board});
+    }
+
+    checkAllShipsSunk() {
+        return this.state.ships.every((ship) => ship.isSunk());
+    }
     render() {
         return(
             <h1 onClick={() => {
-                this.placeShip(this.state.ships[0], 0, 4)
+                this.placeShip(this.state.ships[0], 0, 4, true)
             }}>Hello</h1>
         )
     }
