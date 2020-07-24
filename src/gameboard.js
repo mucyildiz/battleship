@@ -22,18 +22,43 @@ export default class Gameboard extends Component {
 
         this.placeShip = this.placeShip.bind(this);
         this.handleAttack = this.handleAttack.bind(this);
+        this.populateCPUGameboard = this.populateCPUGameboard.bind(this);
     }
 
     componentDidMount(props) {
         if(!this.props.user) {
-            this.populateCPUGameboard();
+            this.populateCPUGameboard(0);
+            this.handleAttack(0, 0);
+            this.handleAttack(9, 9);
         }
     }
 
-    populateCPUGameboard() {
-        for(let i=0; i<this.state.ships.length; i++){
-            this.placeShip(this.state.ships[i], i, 0, false);
+    populateCPUGameboard(shipNum) {
+        let localShips = this.state.ships.slice();
+        let i=0;
+        while(localShips.length > 0) {
+            try{
+                console.log(i);
+                const xCoord = this.getRandomInt(9);
+                const yCoord = this.getRandomInt(9);
+                const rotation = Math.random() > .5 ? true: false;
+                const currShip = this.state.ships[i];
+                this.placeShip(currShip, xCoord, yCoord, rotation);
+                localShips.splice(i, 1);
+                this.setState({ships: localShips})
+                i++;
+                if(i===5){
+                    break;
+                }
+                console.log(i);
+            }
+            catch{}
         }
+        
+    }
+
+    getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
     }
 
 
@@ -44,7 +69,7 @@ export default class Gameboard extends Component {
         // if rotated is false, then the ship is horizontal, if true then the ship is vertical: also checks to see if in bounds
         if (!rotated) {
             // begin at row that ship was placed on 
-            if(column + ship.getLength() > 9) {
+            if(column + ship.getLength() > 10) {
                 throw new Error('ship is out of bounds');
             }
 
@@ -63,7 +88,7 @@ export default class Gameboard extends Component {
         }
         else if (rotated) {
 
-            if(row + ship.getLength() > 9) {
+            if(row + ship.getLength() > 10) {
                 throw new Error('ship is out of bounds');
             }
 
@@ -107,8 +132,14 @@ export default class Gameboard extends Component {
             <div id='gameboard-container'>
                 {this.state.gameboard.map((row, i) => 
                     <div key={i} className='row'>
-                        {row.map((col, j) => (
-                            <div key={i + j} className='cell'></div>
+                        {row.map((ship, j) => (
+                            <Cell 
+                            key={i + j} 
+                            className='cell'
+                            attacked={ship.attacked}
+                            ship={ship.ship}        
+                            shipPosition={ship.shipPosition}                    
+                            />
                         ))}
                     </div>
                 )}
@@ -117,3 +148,29 @@ export default class Gameboard extends Component {
     }
 }
 
+class Cell extends Component {
+    render () {
+        //if miss
+        if(this.props.attacked && !this.props.ship){
+            return (
+                <div className='missed cell'></div>
+            )
+        }
+        //if hit
+        else if(this.props.attacked && this.props.ship){
+            return (
+                <div className='hit cell'></div>
+            )
+        }
+        else if(this.props.ship){
+            return (
+                <div className ='ship cell'></div>
+            )
+        }
+        return (
+            <div className='cell'></div>
+        )
+    }
+
+    //attacked, ship, shipPosition
+}

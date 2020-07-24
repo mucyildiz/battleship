@@ -34,6 +34,9 @@ export default class Game extends Component {
     render() {
         return (
             <div id='main-container'>
+                <div id='title'>
+                    <h1>Battleship</h1>
+                </div>
                 <div id='gameboards'>
                     <Gameboard user={true}/>
                     <Gameboard user={false}/>
