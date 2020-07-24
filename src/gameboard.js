@@ -18,43 +18,38 @@ export default class Gameboard extends Component {
             new Array(10).fill(null).map(() =>
               {return {attacked: false, ship: null, shipPosition: null}})),
             ships: [carrier, battleship, destroyer, submarine, patrolBoat],
+            placedShips: [],
+            gameover: false,
         }
 
         this.placeShip = this.placeShip.bind(this);
         this.handleAttack = this.handleAttack.bind(this);
         this.populateCPUGameboard = this.populateCPUGameboard.bind(this);
+        this.checkAllShipsSunk = this.checkAllShipsSunk.bind(this);
     }
 
     componentDidMount(props) {
         if(!this.props.user) {
-            this.populateCPUGameboard(0);
+            this.populateCPUGameboard();
             this.handleAttack(0, 0);
             this.handleAttack(9, 9);
         }
     }
 
-    populateCPUGameboard(shipNum) {
+    populateCPUGameboard() {
         let localShips = this.state.ships.slice();
-        let i=0;
         while(localShips.length > 0) {
             try{
-                console.log(i);
                 const xCoord = this.getRandomInt(9);
                 const yCoord = this.getRandomInt(9);
                 const rotation = Math.random() > .5 ? true: false;
-                const currShip = this.state.ships[i];
+                const currShip = localShips[0];
                 this.placeShip(currShip, xCoord, yCoord, rotation);
-                localShips.splice(i, 1);
-                this.setState({ships: localShips})
-                i++;
-                if(i===5){
-                    break;
-                }
-                console.log(i);
+                localShips.splice(0, 1);
             }
             catch{}
         }
-        
+        this.setState({ships: localShips})
     }
 
     getRandomInt(max) {
@@ -85,6 +80,9 @@ export default class Gameboard extends Component {
                 ship.isPlaced = true;
                 position++;
             }
+            this.setState((prevState) => ({ placedShips: prevState.placedShips.concat([ship]) }), () => {
+                console.log(this.state.placedShips)
+            })
         }
         else if (rotated) {
 
@@ -104,10 +102,14 @@ export default class Gameboard extends Component {
                 ship.isPlaced = true;
                 position++;
             }
+            this.setState((prevState) => ({ placedShips: prevState.placedShips.concat([ship]) }), () => {
+                console.log(this.state.placedShips)
+            })
         }
         this.setState({
             gameboard: board,
         });
+        
     }
 
     handleAttack(row, col){
@@ -115,15 +117,18 @@ export default class Gameboard extends Component {
         if(board[row][col].attacked === false) {
             if(board[row][col].ship !== null){
                 board[row][col].ship.hitShip(board[row][col].shipPosition);
+                this.checkAllShipsSunk();
             }
-
             board[row][col].attacked = true;
     }
         this.setState({gameboard: board});
     }
 
     checkAllShipsSunk() {
-        return this.state.ships.every((ship) => ship.isSunk());
+        const allSunk = this.state.placedShips.every((ship) => ship.isSunk());
+        this.setState({gameover: allSunk}, () => {
+            console.log(this.state.gameover)
+        });
     }
 
     render() {
@@ -138,12 +143,18 @@ export default class Gameboard extends Component {
                             className='cell'
                             attacked={ship.attacked}
                             ship={ship.ship}        
-                            shipPosition={ship.shipPosition}                    
+                            shipPosition={ship.shipPosition}
+                            user = {this.props.user}          
+                            onclick={() => this.handleAttack(i, j)}
                             />
                         ))}
                     </div>
                 )}
+                <GameOver 
+                isGameOver = {this.state.gameover}
+                />
             </div>
+
         )
     }
 }
@@ -163,14 +174,36 @@ class Cell extends Component {
             )
         }
         else if(this.props.ship){
+            if(this.props.user) {
             return (
                 <div className ='ship cell'></div>
             )
+            }
+            else{
+                return (
+                    <div onClick={this.props.onclick} className ='cell'></div>
+                )
+            }
         }
         return (
-            <div className='cell'></div>
+            <div onClick={this.props.onclick} className='cell'></div>
         )
     }
 
     //attacked, ship, shipPosition
+}
+
+class GameOver extends Component {
+    render() {
+        if (this.props.isGameOver){
+        return (
+            <div id='game-over'>
+                <h1>Game Over</h1>
+            </div>
+        )
+        }
+        else{
+            return null
+        }
+    }
 }
