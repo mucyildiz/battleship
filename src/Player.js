@@ -17,7 +17,9 @@ export default class Player extends Component {
         this.state = {
             gameboard: new Array(10).fill(null).map(() =>
             new Array(10).fill(null).map(() =>
-              {return {attacked: false, ship: null, shipPosition: null}})),
+            {
+                return {attacked: false, ship: null, shipPosition: null}
+            })),
             ships: [carrier, battleship, destroyer, submarine, patrolBoat],
             placedShips: [],
             gameover: false,
@@ -33,6 +35,7 @@ export default class Player extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        console.log(this.props.user ? 'user': 'cpu', 'ships', this.state.ships, 'placedships', this.state.placedShips)
         //if its the user board and its not the user's turn, the CPU moves
         if(this.props.user && prevProps.turn !== this.props.turn && !this.props.turn){
             let row = this.getRandomInt(10);
@@ -58,19 +61,18 @@ export default class Player extends Component {
 
     
     populateCPUGameboard() {
-        let localShips = this.state.ships.slice();
-        while(localShips.length > 0) {
+        let shipsPlaced = 0;
+        while(shipsPlaced < 5){
             try{
                 const row = this.getRandomInt(10);
                 const col = this.getRandomInt(10);
                 const rotation = Math.random() > .5 ? true: false;
-                const currShip = localShips[0];
+                const currShip = this.state.ships[shipsPlaced];
                 this.placeShip(currShip, row, col, rotation);
-                localShips.splice(0, 1);
+                shipsPlaced++;
             }
             catch{}
         }
-        this.setState({ships: localShips})
     }
 
     placeShip(ship, row, column, rotated=false) {
@@ -96,9 +98,6 @@ export default class Player extends Component {
                 ship.isPlaced = true;
                 position++;
             }
-            this.setState((prevState) => ({ placedShips: prevState.placedShips.concat([ship]) }), () => {
-                console.log(this.state.ships)
-            })
         }
         else if (rotated) {
 
@@ -118,14 +117,16 @@ export default class Player extends Component {
                 ship.isPlaced = true;
                 position++;
             }
-            this.setState((prevState) => ({ placedShips: prevState.placedShips.concat([ship]) }), () => {
-                console.log(this.state.placedShips)
-            })
         }
         this.setState({
             gameboard: board,
-        });
-        
+        })
+        this.setState((currentState) => {
+            return {
+            ships: currentState.ships.filter((currShip) => ship !== currShip),
+            placedShips: currentState.placedShips.concat([ship])
+            }
+        })
     }
 
     handleAttack(row, col){
