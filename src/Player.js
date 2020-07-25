@@ -21,6 +21,7 @@ export default class Player extends Component {
             ships: [carrier, battleship, destroyer, submarine, patrolBoat],
             placedShips: [],
             gameover: false,
+            loser: false,
             turnFinished: false,
         }
     }
@@ -130,6 +131,7 @@ export default class Player extends Component {
     handleAttack(row, col){
         //if the game is over do nothing on click,
         // if it's the players turn then they shouldn't be able to click on their own gameboard
+
         if(this.state.gameover){
             return;
         }
@@ -150,7 +152,10 @@ export default class Player extends Component {
 
     checkAllShipsSunk() {
         const allSunk = this.state.placedShips.every((ship) => ship.isSunk());
-        this.setState({gameover: allSunk});
+        this.setState({
+            gameover: allSunk,
+            loser: allSunk
+        });
     }
 
     getRandomInt(max) {
@@ -221,12 +226,12 @@ class Cell extends Component {
             }
             else{
                 return (
-                    <div onClick={this.props.onclick} className ='cell'></div>
+                    <div onClick={this.props.user ? null: this.props.onclick} className ='cell'></div>
                 )
             }
         }
         return (
-            <div onClick={this.props.onclick} className='cell'></div>
+            <div onClick={this.props.user ? null: this.props.onclick} className='cell'></div>
         )
     }
 
@@ -247,3 +252,9 @@ class GameOver extends Component {
         }
     }
 }
+
+/*TODO: add placeShip functionality
+add startGame
+add startNewGame
+
+*/
