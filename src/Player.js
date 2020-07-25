@@ -24,7 +24,7 @@ export default class Player extends Component {
             placedShips: [],
             gameover: false,
             loser: false,
-            turnFinished: false,
+            numPlacedShips: 0,
         }
     }
 
@@ -35,7 +35,27 @@ export default class Player extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log(this.props.user ? 'user': 'cpu', 'ships', this.state.ships, 'placedships', this.state.placedShips)
+        //if a ship coordinate has been submitted, add that ship to the user board
+        if(this.props.user && prevProps.shipCoords !== this.props.shipCoords){
+            //get latest coordinates
+            let coordinates = this.props.shipCoords[this.props.shipCoords.length-1];
+            try{
+            this.placeShip(this.state.ships[0], coordinates[0], coordinates[1]);
+            this.setState((currentState) => {
+                return {
+                    numPlacedShips: currentState.numPlacedShips + 1,
+                }
+            }, () => {
+                if(this.state.numPlacedShips === 5){
+                    this.props.startGame();
+                }
+            })
+            }
+            catch{
+                prompt('Error');
+            }
+        }
+
         //if its the user board and its not the user's turn, the CPU moves
         if(this.props.user && prevProps.turn !== this.props.turn && !this.props.turn){
             let row = this.getRandomInt(10);
@@ -166,7 +186,7 @@ export default class Player extends Component {
     changeTurn() {
         this.setState({
             turn: !this.state.turn,
-        }, () => console.log('changed', this.state.turn))
+        })
     }
 
     render() {

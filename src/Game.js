@@ -16,7 +16,18 @@ export default class Game extends Component {
 
         this.state = {
             turn: true,
+            gameStarted: false,
+            input: '',
+            addedShipCoordinates: []
         }
+
+        this.updateInput = this.updateInput.bind(this);
+    }
+
+    startGame() {
+        this.setState({
+            gameStarted: true,
+        })
     }
 
     changeTurn() {
@@ -25,8 +36,20 @@ export default class Game extends Component {
         })
     }
 
-    componentDidUpdate() {
-        console.log('from Game')
+    handleInput(){
+        this.setState((currentState) => {
+            return {
+            addedShipCoordinates: currentState.addedShipCoordinates.concat([[Number(this.state.input[0]), Number(this.state.input[1])]]),
+            input: '',
+            }
+        })
+    }
+
+    updateInput (e) {
+        const value = e.target.value;
+        this.setState({
+            input: value,
+        })
     }
 
     render() {
@@ -35,16 +58,34 @@ export default class Game extends Component {
                 <div id='title'>
                     <h1>Battleship</h1>
                 </div>
+                {!this.state.gameStarted ? 
+                <div id='user-place-ship-form'>
+                    <form>
+                        <input 
+                        type='text' 
+                        value={this.state.input} 
+                        onChange={this.updateInput}
+                        />
+                        <input type='button' value='submit' onClick={()=> this.handleInput()}></input>
+                    </form>
+                </div> 
+                : 
+                null}
                 <div id='gameboards'>
                     <Player 
                     user={true}
                     turn={this.state.turn}
                     changeTurn={() => this.changeTurn()}
+                    gameStarted={this.state.gameStarted}
+                    input={this.state.input}
+                    shipCoords={this.state.addedShipCoordinates}
+                    startGame={() => this.startGame()}
                     />
                     <Player 
                     user={false}
                     turn={!this.state.turn}
                     changeTurn={() => this.changeTurn()}
+                    gameStarted={this.state.gameStarted}
                     />
                 </div>
             </div>
