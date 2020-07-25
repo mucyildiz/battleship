@@ -18,7 +18,9 @@ export default class Game extends Component {
             turn: true,
             gameStarted: false,
             input: '',
-            addedShipCoordinates: []
+            addedShipCoordinates: [],
+            buttonValue: 'Add ship',
+            gameOver: false,
         }
 
         this.updateInput = this.updateInput.bind(this);
@@ -27,6 +29,12 @@ export default class Game extends Component {
     startGame() {
         this.setState({
             gameStarted: true,
+        })
+    }
+
+    endGame() {
+        this.setState({
+            gameOver: true,
         })
     }
 
@@ -52,6 +60,12 @@ export default class Game extends Component {
         })
     }
 
+    changeButtonValue(newValue) {
+        this.setState({
+            buttonValue: newValue,
+        })
+    }
+
     render() {
         return (
             <div id='main-container'>
@@ -66,7 +80,7 @@ export default class Game extends Component {
                         value={this.state.input} 
                         onChange={this.updateInput}
                         />
-                        <input type='button' value='submit' onClick={()=> this.handleInput()}></input>
+                        <input type='button' value={this.state.buttonValue} onClick={()=> this.handleInput()}></input>
                     </form>
                 </div> 
                 : 
@@ -80,12 +94,16 @@ export default class Game extends Component {
                     input={this.state.input}
                     shipCoords={this.state.addedShipCoordinates}
                     startGame={() => this.startGame()}
+                    gameOver={this.state.gameOver}
+                    endGame={() => this.endGame()}
                     />
                     <Player 
                     user={false}
                     turn={!this.state.turn}
                     changeTurn={() => this.changeTurn()}
                     gameStarted={this.state.gameStarted}
+                    gameOver={this.state.gameOver}
+                    endGame={() => this.endGame()}
                     />
                 </div>
             </div>

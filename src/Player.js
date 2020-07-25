@@ -41,23 +41,26 @@ export default class Player extends Component {
             let coordinates = this.props.shipCoords[this.props.shipCoords.length-1];
             try{
             this.placeShip(this.state.ships[0], coordinates[0], coordinates[1]);
+            //made numplaced ships since setstate is async and can't keep track of placedships.length instantaneously
             this.setState((currentState) => {
                 return {
                     numPlacedShips: currentState.numPlacedShips + 1,
                 }
-            }, () => {
+            }, () => 
+            //if all ships placed, we can start the game, takes away form to add ships
+            {
                 if(this.state.numPlacedShips === 5){
                     this.props.startGame();
                 }
             })
             }
-            catch{
-                prompt('Error');
+            catch(err){
+                alert(err);
             }
         }
 
         //if its the user board and its not the user's turn, the CPU moves
-        if(this.props.user && prevProps.turn !== this.props.turn && !this.props.turn){
+        if(this.props.user && prevProps.turn !== this.props.turn && !this.props.turn && !this.props.gameOver){
             let row = this.getRandomInt(10);
             let col = this.getRandomInt(10);
 
@@ -153,7 +156,11 @@ export default class Player extends Component {
         //if the game is over do nothing on click,
         // if it's the players turn then they shouldn't be able to click on their own gameboard
 
-        if(this.state.gameover){
+        if(!this.props.gameStarted){
+            return;
+        }
+
+        if(this.props.gameOver){
             return;
         }
         let board = this.state.gameboard.slice();
@@ -173,6 +180,9 @@ export default class Player extends Component {
 
     checkAllShipsSunk() {
         const allSunk = this.state.placedShips.every((ship) => ship.isSunk());
+        if(allSunk){
+            this.props.endGame();
+        }
         this.setState({
             gameover: allSunk,
             loser: allSunk
