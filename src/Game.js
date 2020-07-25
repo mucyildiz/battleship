@@ -1,6 +1,3 @@
-// it's gonna be two players: user and CPU 
-// each player has a gameboard property
-// first the CPU sets up its board
 // then player can drag and drop pieces into their own board
 // then player clicks play and game begins
 // player goes first, click on cpu gameboard, cpu gameboard handles attack, checks if all ships sunk
@@ -8,6 +5,7 @@
 // alternates until allShipsSunk is true for a gameboard
 // when true, winner is displayed, option to play again is shown, if selected everything resets
 
+import Player from './Player';
 import Gameboard from './Gameboard';
 import React, { Component } from 'react';
 import './Game.css';
@@ -18,18 +16,19 @@ export default class Game extends Component {
         super(props);
 
         this.state = {
+            turn: true,
         }
-        this.setUpCpuGameboard = this.setUpCpuGameboard.bind(this);
-    }
-    setUpCpuGameboard (props) {
-        // take the cpu gameboard, then take the ships from that gameboard and place them all in random locations
-        // get a random coordinate and try to place the ship - if error thrown, try again until success
-        // generate a num for true or false - above .5 = true, below = false, for rotation
     }
 
-    getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
-      }
+    changeTurn() {
+        this.setState({
+            turn: !this.state.turn
+        })
+    }
+
+    componentDidUpdate() {
+        console.log('from Game')
+    }
 
     render() {
         return (
@@ -38,8 +37,16 @@ export default class Game extends Component {
                     <h1>Battleship</h1>
                 </div>
                 <div id='gameboards'>
-                    <Gameboard user={true}/>
-                    <Gameboard user={false}/>
+                    <Player 
+                    user={true}
+                    turn={this.state.turn}
+                    changeTurn={() => this.changeTurn()}
+                    />
+                    <Player 
+                    user={false}
+                    turn={!this.state.turn}
+                    changeTurn={() => this.changeTurn()}
+                    />
                 </div>
             </div>
         )

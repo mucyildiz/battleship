@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import App from './App';
 import { Ship } from './Ship';
 import Gameboard from './Gameboard'; 
+import Player from './Player';
 
 let mockShip = Ship('mock', 3);
 let mockGameboard = new Gameboard({});
