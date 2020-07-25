@@ -6,7 +6,6 @@
 // when true, winner is displayed, option to play again is shown, if selected everything resets
 
 import Player from './Player';
-import Gameboard from './Gameboard';
 import React, { Component } from 'react';
 import './Game.css';
 

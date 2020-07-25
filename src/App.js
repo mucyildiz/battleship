@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Gameboard from './Gameboard';
 import Game from './Game';
 import Player from './Player';
 
