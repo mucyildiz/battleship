@@ -21,6 +21,7 @@ export default class Game extends Component {
             addedShipCoordinates: [],
             buttonValue: 'Add ship',
             gameOver: false,
+            gameReadyToStart: false,
         }
 
         this.updateInput = this.updateInput.bind(this);
@@ -71,13 +72,19 @@ export default class Game extends Component {
         })
     }
 
+    readyToStartGame() {
+        this.setState({
+            gameReadyToStart: true,
+        })
+    }
+
     render() {
         return (
             <div id='main-container'>
                 <div id='title'>
                     <h1>Battleship</h1>
                 </div>
-                {!this.state.gameStarted ? 
+                {!this.state.gameReadyToStart ? 
                 <div id='user-place-ship-form'>
                     <form onSubmit={this.handleInput}>
                         <input 
@@ -88,8 +95,16 @@ export default class Game extends Component {
                         <input type='submit' value={this.state.buttonValue}></input>
                     </form>
                 </div> 
-                : 
-                null}
+                :
+                null
+                }
+                {!this.state.gameStarted && this.state.gameReadyToStart ? 
+                <button onClick={() => this.startGame()}>Start Game</button>:
+                null
+                }
+
+
+
                 <div id='gameboards'>
                     <Player 
                     user={true}
@@ -101,6 +116,7 @@ export default class Game extends Component {
                     startGame={() => this.startGame()}
                     gameOver={this.state.gameOver}
                     endGame={() => this.endGame()}
+                    ready={() => this.readyToStartGame()}
                     />
                     <Player 
                     user={false}

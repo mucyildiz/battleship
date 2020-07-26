@@ -50,7 +50,7 @@ export default class Player extends Component {
             //if all ships placed, we can start the game, takes away form to add ships
             {
                 if(this.state.numPlacedShips === 5){
-                    this.props.startGame();
+                    this.props.ready();
                 }
             })
             }
@@ -266,8 +266,8 @@ class Cell extends Component {
     //attacked, ship, shipPosition
 }
 
-/*TODO: add placeShip functionality
-add startGame
+/*TODO: add placeShip functionality check
+add startGame 
 add startNewGame
 
 */
