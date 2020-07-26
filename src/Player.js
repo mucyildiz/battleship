@@ -44,8 +44,7 @@ export default class Player extends Component {
                     try{
                     this.placeMockShip(this.state.mockShips[0], xCoord, yCoord, false);
                     }
-                    catch(err){
-                        alert(err)
+                    catch{
                     }
                 }
             }
