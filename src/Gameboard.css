@@ -39,3 +39,39 @@
 .mock {
     background-color: grey;
 }
+
+#game-over {
+    margin: 0 auto;
+}
+
+#title {
+    color: black;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.btn {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: rgb(112, 112, 156);
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    height: 25px;
+}
+
+.btn:hover{
+    background-color: rgb(88, 88, 133);
+}
+
+.btn:focus {
+    outline: none;
+}
+
+#input-container{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#coordinates {
+    width: 30px;
+    text-align: center;
+}

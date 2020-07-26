@@ -22,10 +22,19 @@ export default class Game extends Component {
             buttonValue: 'Add ship',
             gameOver: false,
             gameReadyToStart: false,
+            vertical: false,
         }
 
         this.updateInput = this.updateInput.bind(this);
         this.handleInput = this.handleInput.bind(this);
+    }
+
+    toggleOrientation() {
+        this.setState((currentState) => {
+            return {
+                vertical: !currentState.vertical
+            }
+        })
     }
 
     startGame() {
@@ -37,6 +46,8 @@ export default class Game extends Component {
     endGame() {
         this.setState({
             gameOver: true,
+            gameStarted: false,
+            newGameStarted: false,
         })
     }
 
@@ -82,32 +93,31 @@ export default class Game extends Component {
     render() {
         return (
             <div id='main-container'>
+                <GameOver 
+                isGameOver={this.state.gameOver}
+                />
                 <div id='title'>
                     <h1>Battleship</h1>
                 </div>
-                {!this.state.gameReadyToStart ? 
-                <div id='user-place-ship-form'>
-                    <form onSubmit={this.handleInput}>
-                        <input 
-                        type='text' 
-                        value={this.state.input} 
-                        onChange={this.updateInput}
-                        maxLength={2}
-                        />
-                        <input type='submit' value={this.state.buttonValue}></input>
-                    </form>
-                </div> 
+                {this.state.gameOver ? 
+                <form>
+                    <div id='btn-container'>
+                        <input className='start btn' type='submit' value='Restart'/>
+                    </div>
+                </form>
+                : null}
+                {!this.state.gameStarted && this.state.gameReadyToStart && !this.state.gameOver ? 
+                <div id='btn-container'>
+                    <button onClick={() => this.startGame()} className='start btn'>Start Game</button>
+                </div>    
                 :
-                null
-                }
-                {!this.state.gameStarted && this.state.gameReadyToStart ? 
-                <button onClick={() => this.startGame()}>Start Game</button>:
                 null
                 }
 
 
 
                 <div id='gameboards'>
+                    <div id='user'>
                     <Player 
                     user={true}
                     turn={this.state.turn}
@@ -119,7 +129,32 @@ export default class Game extends Component {
                     gameOver={this.state.gameOver}
                     endGame={() => this.endGame()}
                     ready={() => this.readyToStartGame()}
+                    vertical={this.state.vertical}
                     />
+                    {!this.state.gameReadyToStart ? 
+                    <div id='user-place-ship-form'>
+                        <form onSubmit={this.handleInput} id='form'>
+                            <div id='instruction'>Input coordinate e.g. 'A5'</div>
+                            <div id='input-container'>
+                                <input 
+                                id='coordinates'
+                                type='text' 
+                                value={this.state.input} 
+                                onChange={this.updateInput}
+                                maxLength={2}
+                                />
+                            </div>
+                            <input type='button' onClick={() => this.toggleOrientation()} 
+                            value={this.state.vertical ? 'Make Horizontal': 'Make Vertical'}
+                            className='orientation btn'
+                            ></input>
+                            <input type='submit' value={this.state.buttonValue} className='placeShip btn'></input>
+                        </form>
+                    </div> 
+                    :
+                    null
+                    }
+                    </div>
                     <Player 
                     user={false}
                     turn={!this.state.turn}
@@ -129,9 +164,6 @@ export default class Game extends Component {
                     endGame={() => this.endGame()}
                     />
                 </div>
-                <GameOver 
-                isGameOver={this.state.gameOver}
-                />
             </div>
         )
     }

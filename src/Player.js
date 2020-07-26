@@ -40,9 +40,9 @@ export default class Player extends Component {
             if(this.props.input.length === 2){
                 let xCoord = this.mapLetterToNumber(this.props.input[0]);
                 let yCoord = Number(this.props.input[1]);
-                if(prevProps.input !== this.props.input){
+                if(prevProps.input !== this.props.input || prevProps.vertical !== this.props.vertical){
                     try{
-                    this.placeMockShip(this.state.mockShips[0], xCoord, yCoord, false);
+                    this.placeMockShip(this.state.mockShips[0], xCoord, yCoord, this.props.vertical);
                     }
                     catch{
                     }
@@ -60,7 +60,7 @@ export default class Player extends Component {
             let coordinates = this.props.shipCoords[this.props.shipCoords.length-1];
             console.log(coordinates);
             try{
-            this.placeShip(this.state.ships[0], this.mapLetterToNumber(coordinates[0]), coordinates[1]);
+            this.placeShip(this.state.ships[0], this.mapLetterToNumber(coordinates[0]), coordinates[1], this.props.vertical);
             //made numplaced ships since setstate is async and can't keep track of placedships.length instantaneously
             this.setState((currentState) => {
                 return {
@@ -158,7 +158,7 @@ export default class Player extends Component {
 
             for (let i=column; i<(column + ship.getLength()); i++) {
                 if(board[row][i].ship !== null) {
-                    throw new Error('Cannot overlap ships you fool.');
+                    throw new Error('Cannot overlap ships.');
                 }
             }
 
@@ -175,7 +175,7 @@ export default class Player extends Component {
 
             for (let i=row; i<(row + ship.getLength()); i++) {
                 if(board[i][column].ship !== null) {
-                    throw new Error('Cannot overlap ships you fool.');
+                    throw new Error('Cannot overlap ships.');
                 }
             }
 
@@ -208,7 +208,7 @@ export default class Player extends Component {
 
             for (let i=column; i<(column + ship.getLength()); i++) {
                 if(board[row][i].ship !== null && !board[row][i].mock) {
-                    throw new Error('Cannot overlap ships you fool.');
+                    throw new Error('Cannot overlap ships');
                 }
             }
 
@@ -231,7 +231,7 @@ export default class Player extends Component {
 
             for (let i=row; i<(row + ship.getLength()); i++) {
                 if(board[i][column].ship !== null) {
-                    throw new Error('Cannot overlap ships you fool.');
+                    throw new Error('Cannot overlap ships.');
                 }
             }
 
@@ -313,7 +313,12 @@ export default class Player extends Component {
                 </div>
 
                 <div id='board-container'>
-                    <div id='gameboard-container' className={this.props.gameOver && !this.state.loser ? "winner": ''}>
+                    <div id='gameboard-container' 
+                    style={
+                        {'border': this.props.gameOver && this.state.loser ? '4px solid red' 
+                        : this.props.gameOver && !this.state.loser ? '4px solid forestgreen' 
+                        : null}
+                    }>
                     {this.state.gameboard.map((row, i) => 
                         <div key={i} className='row'>
                             {row.map((ship, j) => (
@@ -383,6 +388,6 @@ add startGame check
 
 
 add resetGame, startNewGame
-when placing ships, highlight where they're about to be placed in grey
+when placing ships, highlight where they're about to be placed in grey check
 
 */
