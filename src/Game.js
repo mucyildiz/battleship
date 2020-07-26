@@ -24,6 +24,7 @@ export default class Game extends Component {
         }
 
         this.updateInput = this.updateInput.bind(this);
+        this.handleInput = this.handleInput.bind(this);
     }
 
     startGame() {
@@ -44,13 +45,17 @@ export default class Game extends Component {
         })
     }
 
-    handleInput(){
-        this.setState((currentState) => {
-            return {
-            addedShipCoordinates: currentState.addedShipCoordinates.concat([[Number(this.state.input[0]), Number(this.state.input[1])]]),
-            input: '',
-            }
-        })
+    handleInput(e){
+        e.preventDefault();
+        e.stopPropagation()
+        if(this.state.input !== '' && this.state.input.length === 2){
+            this.setState((currentState) => {
+                return {
+                addedShipCoordinates: currentState.addedShipCoordinates.concat([[Number(this.state.input[0]), Number(this.state.input[1])]]),
+                input: '',
+                }
+            })
+        }
     }
 
     updateInput (e) {
@@ -74,13 +79,13 @@ export default class Game extends Component {
                 </div>
                 {!this.state.gameStarted ? 
                 <div id='user-place-ship-form'>
-                    <form>
+                    <form onSubmit={this.handleInput}>
                         <input 
                         type='text' 
                         value={this.state.input} 
                         onChange={this.updateInput}
                         />
-                        <input type='button' value={this.state.buttonValue} onClick={()=> this.handleInput()}></input>
+                        <input type='submit' value={this.state.buttonValue}></input>
                     </form>
                 </div> 
                 : 
@@ -106,7 +111,25 @@ export default class Game extends Component {
                     endGame={() => this.endGame()}
                     />
                 </div>
+                <GameOver 
+                isGameOver={this.state.gameOver}
+                />
             </div>
         )
+    }
+}
+
+class GameOver extends Component {
+    render() {
+        if (this.props.isGameOver){
+        return (
+            <div id='game-over'>
+                <h1>Game Over</h1>
+            </div>
+        )
+        }
+        else{
+            return null
+        }
     }
 }

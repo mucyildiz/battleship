@@ -207,7 +207,7 @@ export default class Player extends Component {
                 </div>
 
                 <div id='board-container'>
-                    <div id='gameboard-container' className={this.state.gameover ? "winner": ''}>
+                    <div id='gameboard-container' className={this.props.gameOver && !this.state.loser ? "winner": ''}>
                     {this.state.gameboard.map((row, i) => 
                         <div key={i} className='row'>
                             {row.map((ship, j) => (
@@ -223,9 +223,6 @@ export default class Player extends Component {
                             ))}
                         </div>
                     )}
-                    <GameOver 
-                    isGameOver = {this.state.gameover}
-                    />
                     </div>
                 </div>
             </div>
@@ -267,21 +264,6 @@ class Cell extends Component {
     }
 
     //attacked, ship, shipPosition
-}
-
-class GameOver extends Component {
-    render() {
-        if (this.props.isGameOver){
-        return (
-            <div id='game-over'>
-                <h1>Game Over</h1>
-            </div>
-        )
-        }
-        else{
-            return null
-        }
-    }
 }
 
 /*TODO: add placeShip functionality
