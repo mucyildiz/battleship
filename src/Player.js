@@ -50,7 +50,13 @@ export default class Player extends Component {
                         alert(err)
                     }
                 }
-                // mock placeship goes here. put down a grey ship where the real ship will go. when place ship is pressed, mock ship goes away, real ship takes its place
+            }
+            else{
+                console.log('e');
+                if(prevProps.input !== this.props.input){
+                    console.log('why');
+                    this.clearMocks();
+                }
             }
         }
         //if a ship coordinate has been submitted, add that ship to the user board
@@ -116,8 +122,25 @@ export default class Player extends Component {
         }
     }
 
-    placeMockShip(ship, row, column, rotated=false){
+    clearMocks(){
         let board = this.state.gameboard.slice();
+        for(let row of board){
+            for(let ship of row){
+                if(ship.ship && ship.mock){
+                    ship.mock = false;
+                    ship.ship = null;
+                }
+            }
+        }
+        this.setState({
+            gameboard: board,
+        })
+    }
+
+    placeMockShip(ship, row, column, rotated=false){
+        this.clearMocks();
+        let board = this.state.gameboard.slice();
+        
         // if rotated is false, then the ship is horizontal, if true then the ship is vertical: also checks to see if in bounds
         if (!rotated) {
             // begin at row that ship was placed on 
@@ -150,11 +173,7 @@ export default class Player extends Component {
         this.setState({
             gameboard: board,
         })
-        this.setState((currentState) => {
-            return {
-            mockShips: currentState.mockShips.filter((currShip) => ship !== currShip),
-            }
-        })
+
     }
 
     placeShip(ship, row, column, rotated=false) {
@@ -215,7 +234,8 @@ export default class Player extends Component {
         this.setState((currentState) => {
             return {
             ships: currentState.ships.filter((currShip) => ship !== currShip),
-            placedShips: currentState.placedShips.concat([ship])
+            placedShips: currentState.placedShips.concat([ship]),
+            mockShips: currentState.mockShips.filter((currShip) => ship !== currShip)
             }
         })
     }
