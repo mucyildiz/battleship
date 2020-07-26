@@ -52,7 +52,7 @@ export default class Game extends Component {
         if(this.state.input !== '' && this.state.input.length === 2){
             this.setState((currentState) => {
                 return {
-                addedShipCoordinates: currentState.addedShipCoordinates.concat([[Number(this.state.input[0]), Number(this.state.input[1])]]),
+                addedShipCoordinates: currentState.addedShipCoordinates.concat([[this.state.input[0], Number(this.state.input[1])]]),
                 input: '',
                 }
             })

@@ -38,11 +38,9 @@ export default class Player extends Component {
     componentDidUpdate(prevProps, prevState) {
         if(this.props.user){
             if(this.props.input.length === 2){
-                let xCoord = Number(this.props.input[0]);
+                let xCoord = this.mapLetterToNumber(this.props.input[0]);
                 let yCoord = Number(this.props.input[1]);
                 if(prevProps.input !== this.props.input){
-                    console.log('active');
-                    console.log(this.state.mockShips[0]);
                     try{
                     this.placeMockShip(this.state.mockShips[0], xCoord, yCoord, false);
                     }
@@ -52,9 +50,7 @@ export default class Player extends Component {
                 }
             }
             else{
-                console.log('e');
                 if(prevProps.input !== this.props.input){
-                    console.log('why');
                     this.clearMocks();
                 }
             }
@@ -63,8 +59,9 @@ export default class Player extends Component {
         if(this.props.user && prevProps.shipCoords !== this.props.shipCoords){
             //get latest coordinates
             let coordinates = this.props.shipCoords[this.props.shipCoords.length-1];
+            console.log(coordinates);
             try{
-            this.placeShip(this.state.ships[0], coordinates[0], coordinates[1]);
+            this.placeShip(this.state.ships[0], this.mapLetterToNumber(coordinates[0]), coordinates[1]);
             //made numplaced ships since setstate is async and can't keep track of placedships.length instantaneously
             this.setState((currentState) => {
                 return {
@@ -105,6 +102,11 @@ export default class Player extends Component {
 
         }
     }   
+
+    mapLetterToNumber(letter) {
+        let letters = 'ABCDEFGHIJ';
+        return letters.indexOf(letter.toUpperCase());
+    }
 
     
     populateCPUGameboard() {
