@@ -91,6 +91,7 @@ export default class Game extends Component {
                         type='text' 
                         value={this.state.input} 
                         onChange={this.updateInput}
+                        maxLength={2}
                         />
                         <input type='submit' value={this.state.buttonValue}></input>
                     </form>

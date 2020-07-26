@@ -18,9 +18,10 @@ export default class Player extends Component {
             gameboard: new Array(10).fill(null).map(() =>
             new Array(10).fill(null).map(() =>
             {
-                return {attacked: false, ship: null, shipPosition: null}
+                return {attacked: false, ship: null, shipPosition: null, mock: false}
             })),
             ships: [carrier, battleship, destroyer, submarine, patrolBoat],
+            mockShips: [carrier, battleship, destroyer, submarine, patrolBoat],
             placedShips: [],
             gameover: false,
             loser: false,
@@ -35,6 +36,23 @@ export default class Player extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if(this.props.user){
+            if(this.props.input.length === 2){
+                let xCoord = Number(this.props.input[0]);
+                let yCoord = Number(this.props.input[1]);
+                if(prevProps.input !== this.props.input){
+                    console.log('active');
+                    console.log(this.state.mockShips[0]);
+                    try{
+                    this.placeMockShip(this.state.mockShips[0], xCoord, yCoord, false);
+                    }
+                    catch(err){
+                        alert(err)
+                    }
+                }
+                // mock placeship goes here. put down a grey ship where the real ship will go. when place ship is pressed, mock ship goes away, real ship takes its place
+            }
+        }
         //if a ship coordinate has been submitted, add that ship to the user board
         if(this.props.user && prevProps.shipCoords !== this.props.shipCoords){
             //get latest coordinates
@@ -98,6 +116,47 @@ export default class Player extends Component {
         }
     }
 
+    placeMockShip(ship, row, column, rotated=false){
+        let board = this.state.gameboard.slice();
+        // if rotated is false, then the ship is horizontal, if true then the ship is vertical: also checks to see if in bounds
+        if (!rotated) {
+            // begin at row that ship was placed on 
+            if(column + ship.getLength() > 10) {
+                throw new Error('ship is out of bounds');
+            }
+
+            for (let i=column; i<(column + ship.getLength()); i++) {
+                board[row][i].ship = ship;
+                board[row][i].mock=true;
+            }
+        }
+        else if (rotated) {
+
+            if(row + ship.getLength() > 10) {
+                throw new Error('ship is out of bounds');
+            }
+
+            for (let i=row; i<(row + ship.getLength()); i++) {
+                if(board[i][column].ship !== null) {
+                    throw new Error('Cannot overlap ships you fool.');
+                }
+            }
+
+            for (let i=row; i<(row + ship.getLength()); i++) {
+                board[i][column].ship = ship;
+                board[i][column].mock=true;
+            }
+        }
+        this.setState({
+            gameboard: board,
+        })
+        this.setState((currentState) => {
+            return {
+            mockShips: currentState.mockShips.filter((currShip) => ship !== currShip),
+            }
+        })
+    }
+
     placeShip(ship, row, column, rotated=false) {
         // make a copy so we don't mess with the state
         let board = this.state.gameboard.slice();
@@ -109,13 +168,18 @@ export default class Player extends Component {
                 throw new Error('ship is out of bounds');
             }
 
+
             for (let i=column; i<(column + ship.getLength()); i++) {
-                if(board[row][i].ship !== null) {
+                if(board[row][i].ship !== null && !board[row][i].mock) {
                     throw new Error('Cannot overlap ships you fool.');
                 }
             }
 
             for (let i=column; i<(column + ship.getLength()); i++) {
+                if(board[row][i].ship !== null && board[row][i].mock){
+                    board[row][i].mock = false;
+                    board[row][i].ship = null;
+                }
                 board[row][i].ship = ship;
                 board[row][i].shipPosition = position;
                 ship.isPlaced = true;
@@ -135,6 +199,10 @@ export default class Player extends Component {
             }
 
             for (let i=row; i<(row + ship.getLength()); i++) {
+                if(board[i][column].ship !== null && board[i][column].mock){
+                    board[i][column].mock = false;
+                    board[i][column].ship = null;
+                }
                 board[i][column].ship = ship;
                 board[i][column].shipPosition = position;
                 ship.isPlaced = true;
@@ -215,7 +283,8 @@ export default class Player extends Component {
                                 key={i + j} 
                                 className='cell'
                                 attacked={ship.attacked}
-                                ship={ship.ship}        
+                                ship={ship.ship}
+                                mock={ship.mock}        
                                 shipPosition={ship.shipPosition}
                                 user = {this.props.user}          
                                 onclick={() => this.handleAttack(i, j)}
@@ -248,6 +317,11 @@ class Cell extends Component {
         }
         else if(this.props.ship){
             if(this.props.user) {
+                if(this.props.mock){
+                    return (
+                        <div className = 'mock cell'></div>
+                    )
+                }
             return (
                 <div className ='ship cell'></div>
             )
@@ -267,7 +341,10 @@ class Cell extends Component {
 }
 
 /*TODO: add placeShip functionality check
-add startGame 
-add startNewGame
+add startGame check
+
+
+add resetGame, startNewGame
+when placing ships, highlight where they're about to be placed in grey
 
 */
