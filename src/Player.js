@@ -103,7 +103,14 @@ export default class Player extends Component {
         }
     }   
 
+    isInteger(value) {
+        return /^\d+$/.test(value);
+      }
+
     mapLetterToNumber(letter) {
+        if(this.isInteger(letter)){
+            return Number(letter);
+        }
         let letters = 'ABCDEFGHIJ';
         return letters.indexOf(letter.toUpperCase());
     }
@@ -151,6 +158,12 @@ export default class Player extends Component {
             }
 
             for (let i=column; i<(column + ship.getLength()); i++) {
+                if(board[row][i].ship !== null) {
+                    throw new Error('Cannot overlap ships you fool.');
+                }
+            }
+
+            for (let i=column; i<(column + ship.getLength()); i++) {
                 board[row][i].ship = ship;
                 board[row][i].mock=true;
             }
@@ -180,6 +193,10 @@ export default class Player extends Component {
 
     placeShip(ship, row, column, rotated=false) {
         // make a copy so we don't mess with the state
+        console.log(row, column);
+        if(row < 0 || row > 9 || column < 0 || column > 9 || isNaN(row) || isNaN(column)) {
+            throw new Error('invalid coordinates')
+        }
         let board = this.state.gameboard.slice();
         let position = 0;
         // if rotated is false, then the ship is horizontal, if true then the ship is vertical: also checks to see if in bounds

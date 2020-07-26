@@ -47,6 +47,7 @@ export default class Game extends Component {
     }
 
     handleInput(e){
+        console.log('butt');
         e.preventDefault();
         e.stopPropagation()
         if(this.state.input !== '' && this.state.input.length === 2){
