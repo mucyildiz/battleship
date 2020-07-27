@@ -2,7 +2,7 @@
   "name": "battleship",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://mucyildiz.github.io/battleship",
+  "homepage": "http://mucyildiz.github.io/battleship/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -12,7 +12,7 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "yarn build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
