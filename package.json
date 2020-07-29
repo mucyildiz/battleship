@@ -2,7 +2,7 @@
   "name": "battleship",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/mucyildiz/battleship.git",
+  "homepage": "http://mucyildiz.github.io/battleship/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
