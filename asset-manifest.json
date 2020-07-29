@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/mucyildiz/battleship.git/static/css/main.cd1a7e6a.chunk.css",
-    "main.js": "/mucyildiz/battleship.git/static/js/main.ed2e8127.chunk.js",
-    "main.js.map": "/mucyildiz/battleship.git/static/js/main.ed2e8127.chunk.js.map",
-    "runtime-main.js": "/mucyildiz/battleship.git/static/js/runtime-main.9bc61acd.js",
-    "runtime-main.js.map": "/mucyildiz/battleship.git/static/js/runtime-main.9bc61acd.js.map",
-    "static/js/2.421461c5.chunk.js": "/mucyildiz/battleship.git/static/js/2.421461c5.chunk.js",
-    "static/js/2.421461c5.chunk.js.map": "/mucyildiz/battleship.git/static/js/2.421461c5.chunk.js.map",
-    "index.html": "/mucyildiz/battleship.git/index.html",
-    "precache-manifest.d582aa6f9ce65b8179678acac83a3428.js": "/mucyildiz/battleship.git/precache-manifest.d582aa6f9ce65b8179678acac83a3428.js",
-    "service-worker.js": "/mucyildiz/battleship.git/service-worker.js",
-    "static/css/main.cd1a7e6a.chunk.css.map": "/mucyildiz/battleship.git/static/css/main.cd1a7e6a.chunk.css.map",
-    "static/js/2.421461c5.chunk.js.LICENSE.txt": "/mucyildiz/battleship.git/static/js/2.421461c5.chunk.js.LICENSE.txt"
+    "main.css": "/battleship/static/css/main.cd1a7e6a.chunk.css",
+    "main.js": "/battleship/static/js/main.e0dd2966.chunk.js",
+    "main.js.map": "/battleship/static/js/main.e0dd2966.chunk.js.map",
+    "runtime-main.js": "/battleship/static/js/runtime-main.9e463cc9.js",
+    "runtime-main.js.map": "/battleship/static/js/runtime-main.9e463cc9.js.map",
+    "static/js/2.421461c5.chunk.js": "/battleship/static/js/2.421461c5.chunk.js",
+    "static/js/2.421461c5.chunk.js.map": "/battleship/static/js/2.421461c5.chunk.js.map",
+    "index.html": "/battleship/index.html",
+    "precache-manifest.dd25163f0636112f1c933c36c897ab98.js": "/battleship/precache-manifest.dd25163f0636112f1c933c36c897ab98.js",
+    "service-worker.js": "/battleship/service-worker.js",
+    "static/css/main.cd1a7e6a.chunk.css.map": "/battleship/static/css/main.cd1a7e6a.chunk.css.map",
+    "static/js/2.421461c5.chunk.js.LICENSE.txt": "/battleship/static/js/2.421461c5.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.9bc61acd.js",
+    "static/js/runtime-main.9e463cc9.js",
     "static/js/2.421461c5.chunk.js",
     "static/css/main.cd1a7e6a.chunk.css",
-    "static/js/main.ed2e8127.chunk.js"
+    "static/js/main.e0dd2966.chunk.js"
   ]
 }
